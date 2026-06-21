@@ -12,8 +12,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "KY Asmita Din",
-  description: "Event companion for Bal-Balika KY Asmita Din 2026",
+  title: "Asmita Din",
+  description: "Event companion for Asmita Din 2026",
 };
 
 export const viewport: Viewport = {

@@ -74,7 +74,7 @@ export default async function ProfilePage() {
 
       <ProfileActions />
 
-      <p className="text-center text-muted text-xs mt-6">Bal-Balika KY Asmita Din · June 21, 2026</p>
+      <p className="text-center text-muted text-xs mt-6">Kishore-Kishori · Yuvak-Yuvati Asmita Din · 2026</p>
     </>
   );
 }

@@ -55,10 +55,11 @@ export function verifyToken(token: string | undefined | null): SessionPayload | 
 // For use in Route Handlers / Server Actions (where cookies are mutable).
 export async function setSessionCookie(payload: Omit<SessionPayload, "iat">): Promise<void> {
   const jar = await cookies();
+  const isProd = process.env.NODE_ENV === "production";
   jar.set(COOKIE, createToken(payload), {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     path: "/",
     maxAge: MAX_AGE,
   });

@@ -7,43 +7,79 @@ import { btnFull, inputCls, NishanBar } from "@/components/ui";
 
 type Phase = "checking" | "form";
 
+const TG_AUTO_LOGIN_KEY = "telegramAutoLoginAttempted";
+const AUTO_LOGIN_TIMEOUT_MS = 5000;
+
 export default function LoginPage() {
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("checking");
   const [misId, setMisId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [greeting, setGreeting] = useState<string | null>(null);
+  const [formMessage, setFormMessage] = useState<string | null>(null);
 
   // Try Telegram auto-login on mount; fall back to the MIS ID form.
+  // Uses a sessionStorage flag so the auto-login is attempted at most once
+  // per browser session — if /schedule redirects back here, we skip straight
+  // to the MIS ID form instead of looping.
   useEffect(() => {
     let cancelled = false;
-    async function tryAuto() {
-      if (!isInTelegram()) {
+
+    // One-attempt guard: if we already tried auto-login this session,
+    // go straight to the form with a helpful message.
+    if (typeof window !== "undefined" && sessionStorage.getItem(TG_AUTO_LOGIN_KEY)) {
+      sessionStorage.removeItem(TG_AUTO_LOGIN_KEY);
+      setFormMessage("Please enter your MIS ID to continue.");
+      setPhase("form");
+      return;
+    }
+
+    // Not in Telegram — show form immediately.
+    if (!isInTelegram()) {
+      setPhase("form");
+      return;
+    }
+
+    // Timeout fallback: if the auto-login takes too long, bail to the form.
+    const timer = setTimeout(() => {
+      if (!cancelled) {
+        setFormMessage("Please enter your MIS ID to continue.");
         setPhase("form");
-        return;
       }
+    }, AUTO_LOGIN_TIMEOUT_MS);
+
+    async function tryAuto() {
       try {
         const res = await fetch("/api/auth/telegram", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({ initData: getInitData() }),
         });
         const data = await res.json();
         if (cancelled) return;
         if (data.authenticated) {
+          // Mark that we attempted auto-login before redirecting.
+          // If /schedule bounces us back, the guard above will catch it.
+          sessionStorage.setItem(TG_AUTO_LOGIN_KEY, "1");
           router.replace("/schedule");
           return;
         }
-        if (data.tgFirstName) setGreeting(data.tgFirstName);
+        // Not authenticated via Telegram — show the MIS ID form.
         setPhase("form");
       } catch {
-        if (!cancelled) setPhase("form");
+        if (!cancelled) {
+          setFormMessage("Please enter your MIS ID to continue.");
+          setPhase("form");
+        }
       }
     }
+
     tryAuto();
+
     return () => {
       cancelled = true;
+      clearTimeout(timer);
     };
   }, [router]);
 
@@ -56,6 +92,7 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ misId: misId.trim(), initData: getInitData() }),
       });
       const data = await res.json();
@@ -83,8 +120,6 @@ export default function LoginPage() {
             alt="Asmita Din"
             className="h-20 w-auto mb-4"
           />
-          <h1 className="text-2xl font-bold tracking-tight text-ink">KY Asmita Din</h1>
-          <p className="text-muted text-sm mt-1">Bal-Balika · June 21, 2026</p>
         </div>
 
         {phase === "checking" ? (
@@ -104,11 +139,14 @@ export default function LoginPage() {
           >
             <NishanBar />
             <div className="p-6">
-              {greeting && (
-                <p className="text-sm text-ink mb-3">
-                  Welcome, <span className="font-semibold">{greeting}</span>. Enter your MIS ID to
-                  link your account.
-                </p>
+              <h1 className="text-2xl font-bold tracking-tight text-ink">
+                Welcome to Asmita Din
+              </h1>
+              <p className="text-muted text-sm mt-1 mb-5">
+                Enter your MIS ID to open your event app. No password needed.
+              </p>
+              {formMessage && (
+                <p className="text-sm text-muted mb-3">{formMessage}</p>
               )}
               <label htmlFor="mis" className="block text-sm font-medium text-ink mb-2">
                 MIS ID
@@ -119,7 +157,7 @@ export default function LoginPage() {
                 autoComplete="off"
                 value={misId}
                 onChange={(e) => setMisId(e.target.value)}
-                placeholder="e.g. 586086"
+                placeholder="70123456"
                 className={inputCls}
                 aria-invalid={!!error}
               />
@@ -131,13 +169,13 @@ export default function LoginPage() {
               <button type="submit" disabled={busy || !misId.trim()} className={`${btnFull} mt-4`}>
                 {busy ? "Checking…" : "Enter"}
               </button>
-              <p className="text-muted text-xs mt-4 leading-relaxed">
-                Your MIS ID is on your registration. Logging in on a new device moves your
-                account to it.
-              </p>
             </div>
           </form>
         )}
+
+        <p className="text-center text-muted text-xs mt-6">
+          Kishore-Kishori · Yuvak-Yuvati Asmita Din · 2026
+        </p>
       </div>
     </main>
   );

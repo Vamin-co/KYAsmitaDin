@@ -13,7 +13,7 @@ async function sendMessage(chatId: number, text: string) {
   if (!token) return;
   const url = appUrl();
   const reply_markup = url
-    ? { inline_keyboard: [[{ text: "Open KY Asmita Din", web_app: { url } }]] }
+    ? { inline_keyboard: [[{ text: "Open Asmita Din", web_app: { url } }]] }
     : undefined;
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     if (text.startsWith("/start") || text.startsWith("/help")) {
       await sendMessage(
         chatId,
-        "Welcome to KY Asmita Din. Open the app for your personalized schedule, room maps, the food menu, and trivia. Log in once with your MIS ID and it stays linked to you.",
+        "Welcome to Asmita Din. Open the app for your personalized schedule, room maps, the food menu, and trivia. Log in once with your MIS ID and it stays linked to you.",
       );
     }
   }
