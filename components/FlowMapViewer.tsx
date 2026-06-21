@@ -37,7 +37,7 @@ export function FlowMapViewer({
         if (cancelled || !host) return;
 
         host.innerHTML = text;
-        host.classList.add("flow-wrap", `wing-show-${wing}`);
+        // Wing class lives in the React-controlled className (below) so re-renders keep it.
 
         const reduce =
           typeof window !== "undefined" &&
@@ -142,7 +142,11 @@ export function FlowMapViewer({
             <p className="text-muted text-sm">Couldn&apos;t load the route map. Try again.</p>
           </div>
         )}
-        <div ref={hostRef} className={state === "ready" ? "block" : "hidden"} />
+        <div
+          ref={hostRef}
+          className={`flow-wrap wing-show-${wing}`}
+          style={{ visibility: state === "ready" ? "visible" : "hidden" }}
+        />
       </div>
 
       <p className="text-muted text-xs mt-3 leading-relaxed">

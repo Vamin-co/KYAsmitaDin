@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatTime, nowMinutesInEventTz, timeToMinutes } from "@/lib/time";
+// initialNow is the server-computed minutes-in-event-tz so reveals render immediately.
 import { IconLock, IconClock } from "./ui";
 
 export interface MenuSectionVM {
@@ -12,8 +13,14 @@ export interface MenuSectionVM {
   anchorStart: string | null; // HH:MM (resolved, admin-adjustable)
 }
 
-export function MenuList({ sections }: { sections: MenuSectionVM[] }) {
-  const [nowMin, setNowMin] = useState<number | null>(null);
+export function MenuList({
+  sections,
+  initialNow,
+}: {
+  sections: MenuSectionVM[];
+  initialNow: number | null;
+}) {
+  const [nowMin, setNowMin] = useState<number | null>(initialNow);
   useEffect(() => {
     const tick = () => setNowMin(nowMinutesInEventTz());
     tick();

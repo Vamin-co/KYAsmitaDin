@@ -125,7 +125,7 @@ delegate's group/side. Times come from the schedule but are **admin-adjustable a
 
 **Food menu** — render from `menu.json`. Sections **reveal at their times** (anchored to
 schedule blocks, so reveals shift if the admin moves the day). Admin can also reveal/hide a
-section manually. Dessert shows only "Ice cream".
+section manually. Dessert shows only "Hellenika".
 
 **Trivia** — optional engagement, not competitive:
 - Admin-authored questions, **short free-text answers** with an admin-maintained **accepted-

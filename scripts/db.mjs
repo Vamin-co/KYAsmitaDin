@@ -160,7 +160,8 @@ async function seed() {
         // the row is first created (above ON CONFLICT does not touch times on re-seed).
       }
 
-      // menu_sections
+      // menu_sections (items come straight from menu.json; dessert displays "Hellenika"
+      // per the group's decision — see CLAUDE.md / menu.json note)
       let order = 0;
       for (const s of menu.sections) {
         await c.query(

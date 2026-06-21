@@ -3,6 +3,7 @@ import { getSessionDelegate } from "@/lib/auth";
 import { getMenuSections, getScheduleBlocks } from "@/lib/queries";
 import { PageHeader } from "@/components/PageHeader";
 import { MenuList, type MenuSectionVM } from "@/components/MenuList";
+import { nowMinutesInEventTz } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +31,7 @@ export default async function MenuPage() {
   return (
     <>
       <PageHeader title="Menu" subtitle="Revealed through the day" />
-      <MenuList sections={vms} />
+      <MenuList sections={vms} initialNow={nowMinutesInEventTz()} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 {
   "event": "Bal-Balika KY Asmita Din 2026",
   "date": "2026-06-21",
-  "note": "Sections reveal as the day progresses. reveal_at ties to a schedule block; if the admin shifts the schedule, reveals shift with it. Admin can also reveal/hide any section manually. Dessert intentionally says only \"Ice cream\" (no brand name).",
+  "note": "Sections reveal as the day progresses. reveal_at ties to a schedule block; if the admin shifts the schedule, reveals shift with it. Admin can also reveal/hide any section manually. Dessert shows only \"Hellenika\" (group decision).",
   "sections": [
     {
       "id": "breakfast",

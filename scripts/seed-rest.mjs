@@ -109,7 +109,8 @@ async function main() {
   r = await db.from("schedule_blocks").upsert(blocks, { onConflict: "id" });
   if (r.error) throw r.error;
 
-  // menu
+  // menu (items come straight from menu.json; dessert displays "Hellenika" per the
+  // group's decision — see CLAUDE.md / menu.json note)
   const sections = menu.sections.map((s, i) => ({
     id: s.id,
     label: s.label,
