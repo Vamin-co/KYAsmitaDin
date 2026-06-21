@@ -16,7 +16,7 @@ export default function LoginPage() {
   const [misId, setMisId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [formMessage, setFormMessage] = useState<string | null>(null);
+
 
   // Try Telegram auto-login on mount; fall back to the MIS ID form.
   // Uses a sessionStorage flag so the auto-login is attempted at most once
@@ -29,7 +29,6 @@ export default function LoginPage() {
     // go straight to the form with a helpful message.
     if (typeof window !== "undefined" && sessionStorage.getItem(TG_AUTO_LOGIN_KEY)) {
       sessionStorage.removeItem(TG_AUTO_LOGIN_KEY);
-      setFormMessage("Please enter your MIS ID to continue.");
       setPhase("form");
       return;
     }
@@ -43,7 +42,6 @@ export default function LoginPage() {
     // Timeout fallback: if the auto-login takes too long, bail to the form.
     const timer = setTimeout(() => {
       if (!cancelled) {
-        setFormMessage("Please enter your MIS ID to continue.");
         setPhase("form");
       }
     }, AUTO_LOGIN_TIMEOUT_MS);
@@ -69,7 +67,6 @@ export default function LoginPage() {
         setPhase("form");
       } catch {
         if (!cancelled) {
-          setFormMessage("Please enter your MIS ID to continue.");
           setPhase("form");
         }
       }
@@ -143,11 +140,8 @@ export default function LoginPage() {
                 Welcome to Asmita Din
               </h1>
               <p className="text-muted text-sm mt-1 mb-5">
-                Enter your MIS ID to open your event app. No password needed.
+                Please enter your MIS ID to continue.
               </p>
-              {formMessage && (
-                <p className="text-sm text-muted mb-3">{formMessage}</p>
-              )}
               <label htmlFor="mis" className="block text-sm font-medium text-ink mb-2">
                 MIS ID
               </label>
