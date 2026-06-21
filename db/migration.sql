@@ -38,13 +38,13 @@ create table if not exists questions (
   opened_at        timestamptz,
   closed_at        timestamptz,
   type             text not null default 'text',          -- text | multiple_choice
-  options          text[],                                -- MC option labels (null for text)
+  options          text[] not null default '{}',          -- MC option labels (empty for text)
   correct_option   int                                    -- MC correct option index (null for text)
 );
 
 -- Additive columns for the multiple-choice question type (safe on an existing table).
 alter table questions add column if not exists type           text not null default 'text';
-alter table questions add column if not exists options        text[];
+alter table questions add column if not exists options        text[] not null default '{}';
 alter table questions add column if not exists correct_option int;
 
 -- ---------------------------------------------------------------- submissions

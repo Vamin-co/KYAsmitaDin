@@ -31,7 +31,7 @@ export interface Question {
   closed_at: string | null;
   // Multiple-choice support (additive; defaults make existing text questions unchanged).
   type: "text" | "multiple_choice";
-  options: string[] | null;
+  options: string[];
   correct_option: number | null;
 }
 

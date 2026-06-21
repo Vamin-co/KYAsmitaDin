@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:migrate": "node --env-file=.env.local scripts/db.mjs migrate",
+    "test": "vitest run",
     "db:seed": "node --env-file=.env.local scripts/db.mjs seed",
     "db:setup": "node --env-file=.env.local scripts/db.mjs migrate && node --env-file=.env.local scripts/db.mjs seed",
     "db:seed:rest": "node --env-file=.env.local scripts/seed-rest.mjs",
@@ -27,6 +28,7 @@
     "pg": "^8.13.0",
     "sharp": "^0.34.0",
     "tailwindcss": "^4.1.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.9"
   }
 }

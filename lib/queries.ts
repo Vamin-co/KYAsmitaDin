@@ -89,7 +89,7 @@ export async function getDelegateStats(delegateId: string): Promise<DelegateStat
   ]);
   const score = computeScore(ledger);
   const streak = computeStreaks(
-    questions.map((q) => ({ id: q.id, status: q.status, opened_at: q.opened_at })),
+    questions.map((q) => ({ id: q.id, status: q.status, opened_at: q.opened_at, type: q.type })),
     submissions.map((s) => ({
       question_id: s.question_id,
       attempt_no: s.attempt_no,
@@ -130,7 +130,7 @@ export async function getStandings(): Promise<StandingRow[]> {
     db.from("points_ledger").select("*").then((r) => (r.data ?? []) as LedgerEntry[]),
   ]);
 
-  const qLite = questions.map((q) => ({ id: q.id, status: q.status, opened_at: q.opened_at }));
+  const qLite = questions.map((q) => ({ id: q.id, status: q.status, opened_at: q.opened_at, type: q.type }));
   const rows: StandingRow[] = delegates.map((d) => {
     const dSubs = subs
       .filter((s) => s.delegate_id === d.id)

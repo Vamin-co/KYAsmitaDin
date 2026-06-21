@@ -27,6 +27,7 @@ export interface QuestionRow {
   id: string;
   status: "draft" | "open" | "closed";
   opened_at: string | null;
+  type?: "text" | "multiple_choice";
 }
 
 export type Outcome = "correct" | "wrong" | "pending";
@@ -49,7 +50,8 @@ export function questionOutcome(
   const anyCorrect = subs.some((s) => s.is_correct);
   if (anyCorrect || hasCredit) return { engaged: true, outcome: "correct" };
   if (!engaged) return { engaged: false, outcome: "pending" };
-  const resolved = subs.length >= 2 || question.status === "closed";
+  const maxAttempts = question.type === "multiple_choice" ? 1 : 2;
+  const resolved = subs.length >= maxAttempts || question.status === "closed";
   return { engaged: true, outcome: resolved ? "wrong" : "pending" };
 }
 

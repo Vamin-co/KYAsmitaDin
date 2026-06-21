@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { btnGhost, btnPrimary, btnDanger, inputSm, StatusPill, IconChevronRight } from "@/components/ui";
+import { McEditor, type McValue } from "./McEditor";
+import { validateMc } from "@/lib/question";
 import type { Question } from "@/lib/types";
 
 export function QuestionList({ questions }: { questions: Question[] }) {
@@ -22,10 +24,15 @@ export function QuestionList({ questions }: { questions: Question[] }) {
 
 function QuestionRow({ q }: { q: Question }) {
   const router = useRouter();
+  const isMc = q.type === "multiple_choice";
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
   const [prompt, setPrompt] = useState(q.prompt);
   const [answers, setAnswers] = useState(q.accepted_answers.join("\n"));
+  const [mc, setMc] = useState<McValue>({
+    options: isMc && q.options && q.options.length >= 2 ? [...q.options] : ["", ""],
+    correctIndex: isMc ? q.correct_option : null,
+  });
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -47,21 +54,46 @@ function QuestionRow({ q }: { q: Question }) {
     setError(null);
     setNotice(null);
     try {
-      const res = await api<{ regrade?: { newlyCredited: number } }>("/api/admin/questions", "PATCH", {
-        id: q.id,
-        prompt: prompt.trim(),
-        acceptedAnswers: answers.split("\n").map((a) => a.trim()).filter(Boolean),
-      });
-      setEditing(false);
-      if (res.regrade) {
-        setNotice(`Re-graded — ${res.regrade.newlyCredited} newly credited`);
+      if (isMc) {
+        const v = validateMc(mc.options, mc.correctIndex ?? -1);
+        if (!v.ok) {
+          setError(v.error ?? "Invalid options");
+          setBusy(false);
+          return;
+        }
+        await api("/api/admin/questions", "PATCH", {
+          id: q.id,
+          prompt: prompt.trim(),
+          options: v.options,
+          correctOption: mc.correctIndex,
+        });
+      } else {
+        const res = await api<{ regrade?: { newlyCredited: number } }>("/api/admin/questions", "PATCH", {
+          id: q.id,
+          prompt: prompt.trim(),
+          acceptedAnswers: answers.split("\n").map((a) => a.trim()).filter(Boolean),
+        });
+        if (res.regrade) {
+          setNotice(`Re-graded — ${res.regrade.newlyCredited} newly credited`);
+        }
       }
+      setEditing(false);
       router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed");
     } finally {
       setBusy(false);
     }
+  }
+
+  function cancelEdit() {
+    setEditing(false);
+    setPrompt(q.prompt);
+    setAnswers(q.accepted_answers.join("\n"));
+    setMc({
+      options: isMc && q.options && q.options.length >= 2 ? [...q.options] : ["", ""],
+      correctIndex: isMc ? q.correct_option : null,
+    });
   }
 
   return (
@@ -85,17 +117,47 @@ function QuestionRow({ q }: { q: Question }) {
               <p className="font-medium text-ink leading-snug">{q.prompt}</p>
             )}
           </div>
-          <StatusPill status={q.status} />
+          <div className="flex items-center gap-2 shrink-0">
+            {isMc && (
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted bg-paper border border-line rounded-full px-2 py-0.5">
+                MC
+              </span>
+            )}
+            <StatusPill status={q.status} />
+          </div>
         </div>
 
+        {/* Display/edit answers or MC options */}
         {editing ? (
-          <textarea
-            value={answers}
-            onChange={(e) => setAnswers(e.target.value)}
-            rows={3}
-            className={`${inputSm} mt-2`}
-            placeholder="Accepted answers, one per line"
-          />
+          isMc ? (
+            <div className="mt-2">
+              <McEditor value={mc} onChange={setMc} />
+            </div>
+          ) : (
+            <textarea
+              value={answers}
+              onChange={(e) => setAnswers(e.target.value)}
+              rows={3}
+              className={`${inputSm} mt-2`}
+              placeholder="Accepted answers, one per line"
+            />
+          )
+        ) : isMc ? (
+          <div className="mt-2 space-y-1">
+            {(q.options ?? []).map((opt, i) => (
+              <div
+                key={i}
+                className={`flex items-center gap-2 text-xs rounded-lg px-2.5 py-1.5 border ${
+                  i === q.correct_option
+                    ? "bg-success-soft border-success/30 text-success font-semibold"
+                    : "bg-paper border-line text-muted"
+                }`}
+              >
+                {i === q.correct_option && <IconCheckSmall />}
+                <span>{opt}</span>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="mt-2 flex flex-wrap gap-1.5">
             {q.accepted_answers.map((a, i) => (
@@ -137,11 +199,7 @@ function QuestionRow({ q }: { q: Question }) {
                 Save
               </button>
               <button
-                onClick={() => {
-                  setEditing(false);
-                  setPrompt(q.prompt);
-                  setAnswers(q.accepted_answers.join("\n"));
-                }}
+                onClick={cancelEdit}
                 disabled={busy}
                 className={btnGhost}
               >
@@ -162,5 +220,13 @@ function QuestionRow({ q }: { q: Question }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function IconCheckSmall() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
   );
 }
