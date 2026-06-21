@@ -35,16 +35,19 @@ export function computeScore(ledger: LedgerRow[]): number {
   return ledger.reduce((sum, r) => sum + (r.delta ?? 0), 0);
 }
 
-// Per-question outcome for one delegate. `engaged` means they made >=1 submission.
+// Per-question outcome for one delegate. A question counts as `correct` if any attempt was
+// correct OR the delegate is credited for it (via manual correction or regrade) — credit makes
+// the question correct in its original position even with no correct submission. `engaged`
+// means the delegate either submitted or is credited, so a credited question always counts.
 export function questionOutcome(
   question: QuestionRow,
   submissions: SubmissionRow[],
-  hasCorrection: boolean,
+  hasCredit: boolean,
 ): { engaged: boolean; outcome: Outcome } {
   const subs = submissions.filter((s) => s.question_id === question.id);
   const engaged = subs.length > 0;
   const anyCorrect = subs.some((s) => s.is_correct);
-  if (anyCorrect || hasCorrection) return { engaged: true, outcome: "correct" };
+  if (anyCorrect || hasCredit) return { engaged: true, outcome: "correct" };
   if (!engaged) return { engaged: false, outcome: "pending" };
   const resolved = subs.length >= 2 || question.status === "closed";
   return { engaged: true, outcome: resolved ? "wrong" : "pending" };
@@ -61,9 +64,15 @@ export function computeStreaks(
   submissions: SubmissionRow[],
   ledger: LedgerRow[],
 ): StreakResult {
-  const correctedQ = new Set(
+  // A question is "credited" (counts as correct for the streak, in its original position) when
+  // the delegate has a crediting ledger row for it — whether from a live-correct answer
+  // (question_correct), an admin correction (correction), or a regrade (question_correct).
+  const creditedQ = new Set(
     ledger
-      .filter((r) => r.source === "correction" && r.reference_question_id)
+      .filter(
+        (r) =>
+          (r.source === "question_correct" || r.source === "correction") && r.reference_question_id,
+      )
       .map((r) => r.reference_question_id as string),
   );
 
@@ -74,7 +83,7 @@ export function computeStreaks(
 
   const sequence: Outcome[] = [];
   for (const q of ordered) {
-    const { engaged, outcome } = questionOutcome(q, submissions, correctedQ.has(q.id));
+    const { engaged, outcome } = questionOutcome(q, submissions, creditedQ.has(q.id));
     if (!engaged || outcome === "pending") continue;
     sequence.push(outcome);
   }
