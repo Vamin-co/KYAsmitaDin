@@ -29,6 +29,10 @@ export interface Question {
   created_at: string;
   opened_at: string | null;
   closed_at: string | null;
+  // Multiple-choice support (additive; defaults make existing text questions unchanged).
+  type: "text" | "multiple_choice";
+  options: string[] | null;
+  correct_option: number | null;
 }
 
 export interface Submission {

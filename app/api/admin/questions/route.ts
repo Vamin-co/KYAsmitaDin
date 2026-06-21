@@ -4,6 +4,7 @@ import { getDb } from "@/lib/supabase";
 import { requireAdmin } from "@/lib/auth";
 import { ok, fail, guard } from "@/lib/http";
 import { isAcceptedAnswer } from "@/lib/answer";
+import { validateMc } from "@/lib/question";
 
 export const runtime = "nodejs";
 
@@ -21,24 +22,36 @@ export async function POST(req: NextRequest) {
       prompt?: string;
       acceptedAnswers?: string[];
       sortOrder?: number;
+      type?: string;
+      options?: string[];
+      correctOption?: number;
     };
     const prompt = (body.prompt ?? "").trim();
     if (!prompt) return fail("Question text is required", 400);
-    const accepted = cleanAnswers(body.acceptedAnswers);
-    if (accepted.length === 0) return fail("Add at least one accepted answer", 400);
+
+    const row: Record<string, unknown> = {
+      prompt,
+      status: "draft",
+      sort_order: body.sortOrder ?? 0,
+      created_by: admin.id,
+    };
+
+    if (body.type === "multiple_choice") {
+      const v = validateMc(body.options ?? [], Number(body.correctOption));
+      if (!v.ok) return fail(v.error ?? "Invalid options", 400);
+      row.type = "multiple_choice";
+      row.options = v.options;
+      row.correct_option = Number(body.correctOption);
+      row.accepted_answers = []; // unused for MC
+    } else {
+      const accepted = cleanAnswers(body.acceptedAnswers);
+      if (accepted.length === 0) return fail("Add at least one accepted answer", 400);
+      row.type = "text";
+      row.accepted_answers = accepted;
+    }
 
     const db = getDb();
-    const { data, error } = await db
-      .from("questions")
-      .insert({
-        prompt,
-        accepted_answers: accepted,
-        status: "draft",
-        sort_order: body.sortOrder ?? 0,
-        created_by: admin.id,
-      })
-      .select("*")
-      .single();
+    const { data, error } = await db.from("questions").insert(row).select("*").single();
     if (error) throw error;
     return ok({ question: data });
   });
@@ -52,6 +65,8 @@ export async function PATCH(req: NextRequest) {
       prompt?: string;
       acceptedAnswers?: string[];
       status?: "draft" | "open" | "closed";
+      options?: string[];
+      correctOption?: number;
     };
     const id = (body.id ?? "").trim();
     if (!id) return fail("Missing question id", 400);
@@ -67,6 +82,14 @@ export async function PATCH(req: NextRequest) {
       const accepted = cleanAnswers(body.acceptedAnswers);
       if (accepted.length === 0) return fail("Add at least one accepted answer", 400);
       patch.accepted_answers = accepted;
+    }
+    // Edit MC options / correct option (validated; type/options must stay consistent).
+    if (body.options !== undefined || body.correctOption !== undefined) {
+      const v = validateMc(body.options ?? [], Number(body.correctOption));
+      if (!v.ok) return fail(v.error ?? "Invalid options", 400);
+      patch.type = "multiple_choice";
+      patch.options = v.options;
+      patch.correct_option = Number(body.correctOption);
     }
     if (body.status) {
       patch.status = body.status;

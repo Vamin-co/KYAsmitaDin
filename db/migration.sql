@@ -36,8 +36,16 @@ create table if not exists questions (
   created_by       uuid references delegates(id),
   created_at       timestamptz not null default now(),
   opened_at        timestamptz,
-  closed_at        timestamptz
+  closed_at        timestamptz,
+  type             text not null default 'text',          -- text | multiple_choice
+  options          text[],                                -- MC option labels (null for text)
+  correct_option   int                                    -- MC correct option index (null for text)
 );
+
+-- Additive columns for the multiple-choice question type (safe on an existing table).
+alter table questions add column if not exists type           text not null default 'text';
+alter table questions add column if not exists options        text[];
+alter table questions add column if not exists correct_option int;
 
 -- ---------------------------------------------------------------- submissions
 create table if not exists submissions (
