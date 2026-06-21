@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { getDb } from "@/lib/supabase";
 import { requireAdmin } from "@/lib/auth";
 import { ok, fail, guard } from "@/lib/http";
+import { isAcceptedAnswer } from "@/lib/answer";
 
 export const runtime = "nodejs";
 
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   return guard(async () => {
-    await requireAdmin();
+    const admin = await requireAdmin();
     const body = (await req.json().catch(() => ({}))) as {
       id?: string;
       prompt?: string;
@@ -69,12 +70,8 @@ export async function PATCH(req: NextRequest) {
     }
     if (body.status) {
       patch.status = body.status;
-      if (body.status === "open") {
-        patch.opened_at = new Date().toISOString();
-        // keep exactly one question open for delegates
-        await db.from("questions").update({ status: "closed", closed_at: new Date().toISOString() })
-          .eq("status", "open").neq("id", id);
-      }
+      // Multiple questions may be open at once — opening one does not close others.
+      if (body.status === "open") patch.opened_at = new Date().toISOString();
       if (body.status === "closed") patch.closed_at = new Date().toISOString();
     }
     if (Object.keys(patch).length === 0) return fail("Nothing to update", 400);
@@ -86,6 +83,51 @@ export async function PATCH(req: NextRequest) {
       .select("*")
       .single();
     if (error) throw error;
-    return ok({ question: data });
+
+    // Re-grade on accepted-answers edit: credit any delegate whose existing submission now
+    // matches but who is NOT already credited for this question. Idempotent, append-only.
+    let regrade: { newlyCredited: number } | undefined;
+    if (body.acceptedAnswers) {
+      const accepted = patch.accepted_answers as string[];
+      const [{ data: subData }, { data: ledData }] = await Promise.all([
+        db.from("submissions").select("delegate_id, raw_answer").eq("question_id", id),
+        db
+          .from("points_ledger")
+          .select("delegate_id")
+          .eq("reference_question_id", id)
+          .in("source", ["question_correct", "correction"]),
+      ]);
+      const credited = new Set((ledData ?? []).map((r) => (r as { delegate_id: string }).delegate_id));
+      const toAward = new Set<string>();
+      for (const s of (subData ?? []) as { delegate_id: string; raw_answer: string }[]) {
+        if (credited.has(s.delegate_id) || toAward.has(s.delegate_id)) continue;
+        if (isAcceptedAnswer(s.raw_answer, accepted)) toAward.add(s.delegate_id);
+      }
+
+      let n = 0;
+      for (const delegateId of toAward) {
+        // Re-check immediately before inserting (never double-award).
+        const { data: existing } = await db
+          .from("points_ledger")
+          .select("id")
+          .eq("delegate_id", delegateId)
+          .eq("reference_question_id", id)
+          .in("source", ["question_correct", "correction"])
+          .limit(1);
+        if (existing && existing.length) continue;
+        const { error: insErr } = await db.from("points_ledger").insert({
+          delegate_id: delegateId,
+          delta: 1,
+          source: "question_correct",
+          reference_question_id: id,
+          note: "Re-graded after accepted answers updated",
+          actor: admin.id,
+        });
+        if (!insErr) n++;
+      }
+      regrade = { newlyCredited: n };
+    }
+
+    return ok({ question: data, ...(regrade ? { regrade } : {}) });
   });
 }

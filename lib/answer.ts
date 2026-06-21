@@ -11,9 +11,29 @@ export function normalizeAnswer(input: string): string {
     .trim();
 }
 
-// True if the (raw) answer matches any accepted answer after normalization.
+// For comma-separated list answers where order doesn't matter: split on commas, normalize
+// each token, drop empties, and build a stable key from the sorted token list (joined with a
+// "|" separator that cannot appear in a normalized token, so token boundaries cannot collide).
+// Two answers with the same tokens in any order yield the same key. Exact-after-normalization
+// only — no fuzzy matching.
+function tokenSetKey(input: string): string {
+  return input
+    .split(",")
+    .map(normalizeAnswer)
+    .filter(Boolean)
+    .sort()
+    .join("|");
+}
+
+// True if the (raw) answer matches any accepted answer, by EITHER:
+//   - whole-string normalized equality (fallback for non-list answers), or
+//   - order-independent comma-token-set equality (for list answers).
 export function isAcceptedAnswer(rawAnswer: string, acceptedAnswers: string[]): boolean {
-  const a = normalizeAnswer(rawAnswer);
-  if (!a) return false;
-  return acceptedAnswers.some((acc) => normalizeAnswer(acc) === a);
+  const whole = normalizeAnswer(rawAnswer);
+  const subKey = tokenSetKey(rawAnswer);
+  for (const acc of acceptedAnswers) {
+    if (whole && normalizeAnswer(acc) === whole) return true;
+    if (subKey && tokenSetKey(acc) === subKey) return true;
+  }
+  return false;
 }

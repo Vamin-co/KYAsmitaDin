@@ -27,6 +27,7 @@ function QuestionRow({ q }: { q: Question }) {
   const [prompt, setPrompt] = useState(q.prompt);
   const [answers, setAnswers] = useState(q.accepted_answers.join("\n"));
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   async function setStatus(status: "draft" | "open" | "closed") {
     setBusy(true);
@@ -44,13 +45,17 @@ function QuestionRow({ q }: { q: Question }) {
   async function saveEdit() {
     setBusy(true);
     setError(null);
+    setNotice(null);
     try {
-      await api("/api/admin/questions", "PATCH", {
+      const res = await api<{ regrade?: { newlyCredited: number } }>("/api/admin/questions", "PATCH", {
         id: q.id,
         prompt: prompt.trim(),
         acceptedAnswers: answers.split("\n").map((a) => a.trim()).filter(Boolean),
       });
       setEditing(false);
+      if (res.regrade) {
+        setNotice(`Re-graded — ${res.regrade.newlyCredited} newly credited`);
+      }
       router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed");
@@ -102,6 +107,12 @@ function QuestionRow({ q }: { q: Question }) {
               </span>
             ))}
           </div>
+        )}
+
+        {notice && (
+          <p className="text-success text-sm font-medium mt-2 bg-success-soft border border-success/30 rounded-lg px-3 py-1.5">
+            {notice}
+          </p>
         )}
 
         {error && (

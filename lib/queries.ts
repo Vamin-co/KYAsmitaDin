@@ -43,17 +43,16 @@ export async function getAllQuestions(): Promise<Question[]> {
   return (data ?? []) as Question[];
 }
 
-export async function getOpenQuestion(): Promise<Question | null> {
+// All currently open questions (multiple may be open at once), oldest first for a stable order.
+export async function getOpenQuestions(): Promise<Question[]> {
   const db = getDb();
   const { data, error } = await db
     .from("questions")
     .select("*")
     .eq("status", "open")
-    .order("opened_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .order("opened_at", { ascending: true });
   if (error) throw error;
-  return (data as Question) ?? null;
+  return (data ?? []) as Question[];
 }
 
 export async function getDelegateSubmissions(delegateId: string): Promise<Submission[]> {
