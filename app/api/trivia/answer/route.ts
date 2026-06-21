@@ -70,7 +70,8 @@ export async function POST(req: NextRequest) {
         const stats = await getDelegateStats(delegate.id);
         return ok({ correct: false, noAttemptsLeft: true, attemptsLeft: 0, finished: true, stats });
       }
-      const options = question.options ?? [];
+      const rawOpts = question.options;
+      const options = Array.isArray(rawOpts) ? rawOpts as string[] : [];
       const idx = Number(body.optionIndex);
       if (!Number.isInteger(idx) || idx < 0 || idx >= options.length) {
         return fail("Pick an option", 400);
