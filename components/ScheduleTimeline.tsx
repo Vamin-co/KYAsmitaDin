@@ -19,7 +19,7 @@ const CAT: Record<string, { dot: string; pill: string }> = {
 
 type Status = "past" | "live" | "upcoming";
 
-export function ScheduleTimeline({ items, wing }: { items: ScheduleItem[]; wing: string }) {
+export function ScheduleTimeline({ items }: { items: ScheduleItem[] }) {
   const [nowMin, setNowMin] = useState<number | null>(null);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export function ScheduleTimeline({ items, wing }: { items: ScheduleItem[]; wing:
         const cat = CAT[it.category] ?? CAT.other;
         const status = statusOf(it);
         const isLast = i === items.length - 1;
-        const dim = status === "past" || it.otherSideOnly;
+        const dim = status === "past";
 
         return (
           <li key={it.id} className="relative flex gap-3 animate-rise" style={{ animationDelay: `${Math.min(i * 25, 300)}ms` }}>
@@ -101,10 +101,6 @@ export function ScheduleTimeline({ items, wing }: { items: ScheduleItem[]; wing:
 
                 {it.details && <p className="mt-2 text-sm text-muted leading-snug">{it.details}</p>}
 
-                {it.otherSideOnly && (
-                  <p className="mt-2 text-xs text-muted italic">Not your group — for the other wing.</p>
-                )}
-
                 {it.highlights.length > 0 && (
                   <dl className="mt-3 rounded-xl bg-gold-soft border border-gold/30 px-3 py-2 space-y-1">
                     {it.highlights.map((h) => (
@@ -118,12 +114,12 @@ export function ScheduleTimeline({ items, wing }: { items: ScheduleItem[]; wing:
                   </dl>
                 )}
 
-                {it.flowAsset && (
+                {it.hasMap && (
                   <Link
-                    href={`/map/${it.id}`}
+                    href="/maps"
                     className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand active:opacity-70 tap"
                   >
-                    <IconMap size={16} /> View route
+                    <IconMap size={16} /> View maps
                     <IconChevronRight size={15} />
                   </Link>
                 )}

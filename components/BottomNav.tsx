@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconCalendar, IconTrophy, IconFood, IconUser } from "./ui";
+import { IconCalendar, IconTrophy, IconFood, IconUser, IconMap } from "./ui";
 
 const items = [
   { href: "/schedule", label: "Schedule", Icon: IconCalendar },
+  { href: "/maps", label: "Maps", Icon: IconMap },
   { href: "/trivia", label: "Trivia", Icon: IconTrophy },
   { href: "/menu", label: "Menu", Icon: IconFood },
   { href: "/profile", label: "Profile", Icon: IconUser },
@@ -19,7 +20,7 @@ export function BottomNav() {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="Primary"
     >
-      <div className="max-w-md mx-auto grid grid-cols-4">
+      <div className="max-w-md mx-auto grid grid-cols-5">
         {items.map(({ href, label, Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
           return (

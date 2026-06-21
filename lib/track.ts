@@ -41,11 +41,11 @@ export function roomForTrackRound(track: Track, round: number): string | null {
 // The presentation topic per room per round, from ky_schedule.json asmita_talks.slots.
 // room_214 / room_212 topic by round.
 const ROUND_TOPICS: Record<number, { "214": string; "212": string }> = {
-  1: { "214": "Bhagwan Swaminarayan", "212": "Holy Scriptures of the Sampraday" },
-  2: { "214": "Bhagwan Swaminarayan", "212": "Holy Scriptures of the Sampraday" },
-  3: { "214": "Gunatit Guru Parampara", "212": "Magnificent Mandirs of the Sampraday" },
-  4: { "214": "Sadhus & Devotees of the Sampraday", "212": "Magnificent Mandirs of the Sampraday" },
-  5: { "214": "Gunatit Guru Parampara", "212": "Sadhus & Devotees of the Sampraday" },
+  1: { "214": "Bhagwan Swaminarayan", "212": "The Holy Scriptures of the Sampraday" },
+  2: { "214": "Bhagwan Swaminarayan", "212": "The Holy Scriptures of the Sampraday" },
+  3: { "214": "The Gunatit Guru Parampara", "212": "The Magnificent Mandirs of the Sampraday" },
+  4: { "214": "The Sadhus & Devotees of the Sampraday", "212": "The Magnificent Mandirs of the Sampraday" },
+  5: { "214": "The Gunatit Guru Parampara", "212": "The Sadhus & Devotees of the Sampraday" },
 };
 
 export function topicForRoom(round: number, room: string): string | null {
@@ -62,37 +62,23 @@ export function roundFromBlockName(name: string): number | null {
   return m ? Number(m[1]) : null;
 }
 
-// Resolve the flow-map asset key for a schedule block's flow_map_key + the delegate's track.
-// Returns the optimized SVG basename in /public/flowmaps, or null for "no map".
-export function resolveFlowMapAsset(
-  flowMapKey: string | null | undefined,
-  track: Track | null,
-): string | null {
-  if (!flowMapKey) return null;
-  switch (flowMapKey) {
-    case "program2_to_lunch":
-      return "program2_to_lunch";
-    case "talks_round_1":
-      // Destination room differs by track: A -> 214 (Round 1.svg), B -> 212 (Round 1.5.svg)
-      if (track === "A") return "talks_round_1_214";
-      if (track === "B") return "talks_round_1_212";
-      return "talks_round_1_214";
-    case "talks_round_2_4":
-      return "talks_round_2_4";
-    default:
-      return null;
-  }
-}
-
-// Wing -> css layer suffix used by the flow-map viewer ("e" = blue eSide, "i" = red iSide).
-export function wingLayer(wing: Wing | string): "e" | "i" {
-  return wing === "iSide" ? "i" : "e";
-}
-
 export function wingLabel(wing: Wing | string): string {
   return wing === "iSide" ? "Kishoris / Yuvatis" : "Kishores / Yuvaks";
 }
 
-export function wingColor(wing: Wing | string): string {
-  return wing === "iSide" ? "#d56062" : "#067bc2";
+// Goshthi moderator per goshthi group (keyed on the normalized group name, so the roster's
+// diacritic forms map too). Hardcoded per the event lead.
+const GOSHTHI_MODERATORS: Record<string, string> = {
+  ghanshyam: "Akshaybhai Patel",
+  nilkanth: "Ankitbhai Patel",
+  sahajanand: "Parjanyabhai Brahmachari",
+  parabrahma: "Tarunbhai Patel",
+  chidakash: "Sneha Parikh",
+  brahma: "Nipa Patel",
+  gunatit: "Payal P Patel",
+  pragat: "Janki Mistry",
+};
+
+export function goshthiModerator(rawGroup: string | null | undefined): string | null {
+  return GOSHTHI_MODERATORS[normalizeGroup(rawGroup)] ?? null;
 }

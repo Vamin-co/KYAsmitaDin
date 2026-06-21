@@ -70,7 +70,7 @@
       "category": "program",
       "scope": "by_mandal",
       "location": "Sabha Hall",
-      "details": "KY split, mandal-based session on mahima and the gurus' lives",
+      "details": "Session on Mahima and gurus' lives",
       "flow_map_key": null
     },
     {
@@ -142,7 +142,7 @@
       "category": "asmita_talks",
       "scope": "all_split",
       "location": "Room 214 / Room 212",
-      "details": "Bhagwan Swaminarayan  |  The Holy Scriptures of the Sampraday",
+      "details": "Bhagwan Swaminarayan • The Holy Scriptures of the Sampraday",
       "flow_map_key": "talks_round_1"
     },
     {
@@ -166,7 +166,7 @@
       "category": "asmita_talks",
       "scope": "all_split",
       "location": "Room 212 / Room 214",
-      "details": "The Holy Scriptures  |  The Sadhus and Devotees of the Sampraday",
+      "details": "The Holy Scriptures of the Sampraday • Bhagwan Swaminarayan",
       "flow_map_key": "talks_round_2_4"
     },
     {
@@ -178,7 +178,7 @@
       "category": "meal",
       "scope": "all",
       "location": "--",
-      "details": "Break for snacks (mid-talks)",
+      "details": "Break for snacks",
       "flow_map_key": null
     },
     {
@@ -190,7 +190,7 @@
       "category": "asmita_talks",
       "scope": "all_split",
       "location": "Room 214 / Room 212",
-      "details": "The Sadhus and Devotees  |  The Magnificent Mandirs of the Sampraday",
+      "details": "The Magnificent Mandirs of the Sampraday • The Gunatit Guru Parampara",
       "flow_map_key": "talks_round_2_4"
     },
     {
@@ -214,7 +214,7 @@
       "category": "asmita_talks",
       "scope": "all_split",
       "location": "Room 212 / Room 214",
-      "details": "The Magnificent Mandirs  |  The Gunatit Guru Parampara",
+      "details": "The Sadhus & Devotees of the Sampraday • The Magnificent Mandirs of the Sampraday",
       "flow_map_key": "talks_round_2_4"
     },
     {
@@ -238,7 +238,7 @@
       "category": "asmita_talks",
       "scope": "all",
       "location": "Room 214 / Room 212",
-      "details": "The Gunatit Guru Parampara  |  Bhagwan Swaminarayan (no movement - presenters come to you)",
+      "details": "The Gunatit Guru Parampara • The Sadhus & Devotees of the Sampraday",
       "flow_map_key": null
     },
     {

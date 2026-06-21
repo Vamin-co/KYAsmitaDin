@@ -1,7 +1,10 @@
-// Build the personalized schedule view-model for a delegate from the (admin-adjustable)
-// schedule blocks. Shared, pure logic (no server-only deps) so it is easy to reason about.
+// Build the delegate's personal day from the (admin-adjustable) schedule blocks.
+// Shows the shared blocks everyone attends plus the delegate's own specifics resolved to a
+// single value (their Asmita Talks room + topic per round by track, their goshthi + moderator,
+// their wing's group photo). Other wings'/tracks' variants are removed entirely so it reads
+// as "my day," not the master schedule with my parts marked.
 import {
-  resolveFlowMapAsset,
+  goshthiModerator,
   roundFromBlockName,
   roomForTrackRound,
   topicForRoom,
@@ -24,8 +27,7 @@ export interface ScheduleItem {
   start: string; // HH:MM
   end: string;
   highlights: Highlight[];
-  flowAsset: string | null; // resolved optimized-SVG basename, or null
-  otherSideOnly: boolean; // a group-photo block for the opposite wing (show dimmed)
+  hasMap: boolean; // movement block -> show a link to the floor-plan maps
   round: number | null;
 }
 
@@ -39,52 +41,53 @@ export function buildPersonalSchedule(
   blocks: ScheduleBlock[],
 ): ScheduleItem[] {
   const track = (delegate.track as Track | null) ?? null;
+  const items: ScheduleItem[] = [];
 
-  return blocks.map((b) => {
+  for (const b of blocks) {
+    // Drop the other wing's group-photo block (and any other single-wing block that
+    // isn't this delegate's) so only the delegate's day remains.
+    if ((b.scope === "eSide" || b.scope === "iSide") && b.scope !== delegate.wing) {
+      continue;
+    }
+
     const highlights: Highlight[] = [];
-    let otherSideOnly = false;
+    let location = b.location;
     const round = b.category === "asmita_talks" ? roundFromBlockName(b.name) : null;
 
+    // Asmita Talks: resolve to the delegate's single room + topic for their track.
     if (b.category === "asmita_talks" && round && track) {
       const room = roomForTrackRound(track, round);
       if (room) {
+        location = `Room ${room}`;
         highlights.push({ label: "Your room", value: `Room ${room}` });
         const topic = topicForRoom(round, room);
         if (topic) highlights.push({ label: "Topic", value: topic });
       }
     }
 
-    if (b.scope === "by_mandal" && delegate.mandal) {
-      highlights.push({ label: "Your mandal", value: delegate.mandal });
-    }
-
-    if (b.scope === "by_goshthi_group" && delegate.goshthi_group) {
-      highlights.push({ label: "Your group", value: delegate.goshthi_group });
-    }
-
-    if (b.scope === "eSide" || b.scope === "iSide") {
-      if (b.scope === delegate.wing) {
-        highlights.push({ label: "Your group photo", value: b.location || "Nij Mandir" });
-      } else {
-        otherSideOnly = true;
+    // Goshthi: the delegate's group + their moderator.
+    if (b.scope === "by_goshthi_group") {
+      if (delegate.goshthi_group) {
+        highlights.push({ label: "Your group", value: delegate.goshthi_group });
       }
+      const mod = goshthiModerator(delegate.goshthi_group);
+      if (mod) highlights.push({ label: "Moderator", value: mod });
     }
 
-    const flowAsset = resolveFlowMapAsset(b.flow_map_key, track);
-
-    return {
+    items.push({
       id: b.id,
       name: b.name,
       category: b.category,
       scope: b.scope,
-      location: b.location,
+      location,
       details: b.details,
       start: hhmm(b.start_time),
       end: hhmm(b.end_time),
       highlights,
-      flowAsset,
-      otherSideOnly,
+      hasMap: b.flow_map_key != null,
       round,
-    };
-  });
+    });
+  }
+
+  return items;
 }

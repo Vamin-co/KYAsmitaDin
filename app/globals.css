@@ -60,19 +60,6 @@
   50% { opacity: 0.45; }
 }
 
-/* Flow-map route draw-on + destination pulse + origin dot */
-@keyframes draw-on {
-  to { stroke-dashoffset: 0; }
-}
-@keyframes dest-pulse {
-  0% { transform: scale(0.6); opacity: 0.55; }
-  70% { transform: scale(2.4); opacity: 0; }
-  100% { transform: scale(2.4); opacity: 0; }
-}
-@keyframes marker-in {
-  from { opacity: 0; transform: scale(0.4); }
-  to { opacity: 1; transform: scale(1); }
-}
 @keyframes confetti-fall {
   0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
   100% { transform: translateY(90px) rotate(320deg); opacity: 0; }
@@ -114,17 +101,6 @@ body {
 /* Tap targets feel responsive without layout shift */
 .tap { -webkit-tap-highlight-color: transparent; }
 
-/* ---- flow maps ---- */
-.flowmap-svg { display: block; width: 100%; height: auto; }
-.flow-wrap.wing-show-e [data-wing="i"] { display: none; }
-.flow-wrap.wing-show-i [data-wing="e"] { display: none; }
-[data-flow-marker] { transform-box: fill-box; transform-origin: center; }
-
-@keyframes flow-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.16); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-rise,
   .animate-pop,
@@ -133,8 +109,4 @@ body {
   .confetti-piece {
     animation: none !important;
   }
-  /* show flow routes fully drawn, no motion */
-  [data-flow-arrow] { stroke-dashoffset: 0 !important; animation: none !important; }
-  [data-flow-pulse] { animation: none !important; opacity: 0.5 !important; }
-  [data-flow-marker] { animation: none !important; opacity: 1 !important; }
 }

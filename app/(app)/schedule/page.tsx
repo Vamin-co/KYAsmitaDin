@@ -26,7 +26,7 @@ export default async function SchedulePage() {
           The schedule is being finalized.
         </div>
       ) : (
-        <ScheduleTimeline items={items} wing={delegate.wing} />
+        <ScheduleTimeline items={items} />
       )}
     </>
   );
