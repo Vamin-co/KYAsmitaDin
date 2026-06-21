@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/* ============================================================
+   KY Asmita Din — brand tokens (inherited from content.md)
+   Papery, deep-red + gold, minimal shadow. No generic AI look.
+   ============================================================ */
+@theme {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Brand (red) */
+  --color-brand: #c5272b;
+  --color-brand-deep: #9e1f22;
+  --color-brand-soft: #fdf1f1;
+
+  /* Gold / accent */
+  --color-gold: #ffb600;
+  --color-gold-deep: #c98f00;
+  --color-gold-soft: #fff7e2;
+
+  /* Neutrals */
+  --color-paper: #faf7f2;
+  --color-card: #ffffff;
+  --color-ink: #211d1a;
+  --color-muted: #756a5e;
+  --color-line: #e9e1d5;
+
+  /* Semantic */
+  --color-success: #1e7f4f;
+  --color-success-soft: #ecf7f0;
+
+  /* Wing colors (flow maps) */
+  --color-wing-e: #067bc2; /* eSide — kishores/yuvaks */
+  --color-wing-i: #d56062; /* iSide — kishoris/yuvatis */
+
+  /* Animations */
+  --animate-rise: rise 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-pop: pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-shake: shake 0.45s ease-in-out both;
+  --animate-blink: blink 1.8s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop {
+  0% { opacity: 0; transform: scale(0.92); }
+  60% { opacity: 1; transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* Flow-map route draw-on + destination pulse + origin dot */
+@keyframes draw-on {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes dest-pulse {
+  0% { transform: scale(0.6); opacity: 0.55; }
+  70% { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@keyframes marker-in {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(90px) rotate(320deg); opacity: 0; }
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  /* honor Telegram webview safe areas + viewport var when present */
+  height: 100%;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* prevent rubber-band reveal of body bg inside Telegram sheet */
+  overscroll-behavior-y: none;
+}
+
+/* Utility: nishan-bar striped motif (dharma-nishan flag) */
+.nishan-bar {
+  height: 5px;
+  background: repeating-linear-gradient(
+    -55deg,
+    var(--color-brand) 0 14px,
+    #ffffff 14px 22px
+  );
+}
+
+.animate-rise { animation: var(--animate-rise); }
+.animate-pop { animation: var(--animate-pop); }
+.animate-shake { animation: var(--animate-shake); }
+.animate-blink { animation: var(--animate-blink); }
+
+/* Tap targets feel responsive without layout shift */
+.tap { -webkit-tap-highlight-color: transparent; }
+
+/* ---- flow maps ---- */
+.flowmap-svg { display: block; width: 100%; height: auto; }
+.flow-wrap.wing-show-e [data-wing="i"] { display: none; }
+.flow-wrap.wing-show-i [data-wing="e"] { display: none; }
+[data-flow-marker] { transform-box: fill-box; transform-origin: center; }
+
+@keyframes flow-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.16); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-pop,
+  .animate-shake,
+  .animate-blink,
+  .confetti-piece {
+    animation: none !important;
+  }
+  /* show flow routes fully drawn, no motion */
+  [data-flow-arrow] { stroke-dashoffset: 0 !important; animation: none !important; }
+  [data-flow-pulse] { animation: none !important; opacity: 0.5 !important; }
+  [data-flow-marker] { animation: none !important; opacity: 1 !important; }
+}

@@ -1,0 +1,439 @@
+{
+  "event": "Bal-Balika KY Asmita Din 2026",
+  "date": "2026-06-21",
+  "timezone": "America/Los_Angeles",
+  "source": "KyAsmitaDin.xlsx (final locked schedule)",
+  "note": "Times are admin-adjustable at runtime. Notifications are NOT in scope (handled via a Telegram announcements channel).",
+  "scope_legend": {
+    "all": "everyone",
+    "eSide": "kishores/yuvaks",
+    "iSide": "kishoris/yuvatis",
+    "by_mandal": "Program 2 splits by mandal into rooms",
+    "all_split": "everyone, split into two talk tracks by goshthi group - see asmita_talks",
+    "by_goshthi_group": "clusters by goshthi group (single location: Sabha Hall)"
+  },
+  "schedule": [
+    {
+      "id": 1,
+      "name": "Breakfast",
+      "start": "09:00",
+      "end": "10:00",
+      "duration_min": 60,
+      "category": "meal",
+      "scope": "all",
+      "location": "Dining Hall",
+      "details": "Start the day off strong",
+      "flow_map_key": null
+    },
+    {
+      "id": 2,
+      "name": "Arrival, Registration, & Seating",
+      "start": "10:00",
+      "end": "10:30",
+      "duration_min": 30,
+      "category": "other",
+      "scope": "all",
+      "location": "Sabha Hall",
+      "details": "Delegates arrive, travel, and check in",
+      "flow_map_key": null
+    },
+    {
+      "id": 3,
+      "name": "Program 1: Welcome Session",
+      "start": "10:30",
+      "end": "11:15",
+      "duration_min": 45,
+      "category": "program",
+      "scope": "all",
+      "location": "Sabha Hall",
+      "details": "Opening program introducing the theme of asmita",
+      "flow_map_key": null
+    },
+    {
+      "id": 4,
+      "name": "Break",
+      "start": "11:15",
+      "end": "11:30",
+      "duration_min": 15,
+      "category": "other",
+      "scope": "all",
+      "location": "Sabha Hall",
+      "details": "Stretch / water break",
+      "flow_map_key": null
+    },
+    {
+      "id": 5,
+      "name": "Program 2: Building Asmita",
+      "start": "11:30",
+      "end": "12:30",
+      "duration_min": 60,
+      "category": "program",
+      "scope": "by_mandal",
+      "location": "Sabha Hall",
+      "details": "KY split, mandal-based session on mahima and the gurus' lives",
+      "flow_map_key": null
+    },
+    {
+      "id": 6,
+      "name": "Group Picture - Kishores/Yuvaks",
+      "start": "12:30",
+      "end": "12:40",
+      "duration_min": 10,
+      "category": "other",
+      "scope": "eSide",
+      "location": "Nij Mandir",
+      "details": "eSide group picture before lunch",
+      "flow_map_key": null
+    },
+    {
+      "id": 7,
+      "name": "Travel",
+      "start": "12:40",
+      "end": "12:45",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to lunch",
+      "flow_map_key": "program2_to_lunch"
+    },
+    {
+      "id": 8,
+      "name": "Lunch",
+      "start": "12:45",
+      "end": "13:45",
+      "duration_min": 60,
+      "category": "meal",
+      "scope": "all",
+      "location": "Dining Hall",
+      "details": "60 minute lunch break",
+      "flow_map_key": null
+    },
+    {
+      "id": 9,
+      "name": "Group Picture - Kishoris/Yuvatis",
+      "start": "13:45",
+      "end": "13:55",
+      "duration_min": 10,
+      "category": "other",
+      "scope": "iSide",
+      "location": "Nij Mandir",
+      "details": "iSide group picture after lunch",
+      "flow_map_key": null
+    },
+    {
+      "id": 10,
+      "name": "Travel",
+      "start": "13:55",
+      "end": "14:00",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to Asmita Talks rooms",
+      "flow_map_key": "talks_round_1"
+    },
+    {
+      "id": 11,
+      "name": "Asmita Talks - Round 1",
+      "start": "14:00",
+      "end": "14:15",
+      "duration_min": 15,
+      "category": "asmita_talks",
+      "scope": "all_split",
+      "location": "Room 214 / Room 212",
+      "details": "Bhagwan Swaminarayan  |  The Holy Scriptures of the Sampraday",
+      "flow_map_key": "talks_round_1"
+    },
+    {
+      "id": 12,
+      "name": "Travel",
+      "start": "14:15",
+      "end": "14:20",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to Asmita Talks rooms",
+      "flow_map_key": "talks_round_2_4"
+    },
+    {
+      "id": 13,
+      "name": "Asmita Talks - Round 2",
+      "start": "14:20",
+      "end": "14:35",
+      "duration_min": 15,
+      "category": "asmita_talks",
+      "scope": "all_split",
+      "location": "Room 212 / Room 214",
+      "details": "The Holy Scriptures  |  The Sadhus and Devotees of the Sampraday",
+      "flow_map_key": "talks_round_2_4"
+    },
+    {
+      "id": 14,
+      "name": "Snack / Stretch Break",
+      "start": "14:35",
+      "end": "14:55",
+      "duration_min": 20,
+      "category": "meal",
+      "scope": "all",
+      "location": "--",
+      "details": "Break for snacks (mid-talks)",
+      "flow_map_key": null
+    },
+    {
+      "id": 15,
+      "name": "Asmita Talks - Round 3",
+      "start": "14:55",
+      "end": "15:10",
+      "duration_min": 15,
+      "category": "asmita_talks",
+      "scope": "all_split",
+      "location": "Room 214 / Room 212",
+      "details": "The Sadhus and Devotees  |  The Magnificent Mandirs of the Sampraday",
+      "flow_map_key": "talks_round_2_4"
+    },
+    {
+      "id": 16,
+      "name": "Travel",
+      "start": "15:10",
+      "end": "15:15",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to Asmita Talks rooms",
+      "flow_map_key": "talks_round_2_4"
+    },
+    {
+      "id": 17,
+      "name": "Asmita Talks - Round 4",
+      "start": "15:15",
+      "end": "15:30",
+      "duration_min": 15,
+      "category": "asmita_talks",
+      "scope": "all_split",
+      "location": "Room 212 / Room 214",
+      "details": "The Magnificent Mandirs  |  The Gunatit Guru Parampara",
+      "flow_map_key": "talks_round_2_4"
+    },
+    {
+      "id": 18,
+      "name": "Travel",
+      "start": "15:30",
+      "end": "15:35",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to Asmita Talks rooms",
+      "flow_map_key": "talks_round_2_4"
+    },
+    {
+      "id": 19,
+      "name": "Asmita Talks - Round 5",
+      "start": "15:35",
+      "end": "15:50",
+      "duration_min": 15,
+      "category": "asmita_talks",
+      "scope": "all",
+      "location": "Room 214 / Room 212",
+      "details": "The Gunatit Guru Parampara  |  Bhagwan Swaminarayan (no movement - presenters come to you)",
+      "flow_map_key": null
+    },
+    {
+      "id": 20,
+      "name": "Travel",
+      "start": "15:50",
+      "end": "15:55",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to snack",
+      "flow_map_key": null
+    },
+    {
+      "id": 21,
+      "name": "Snack Break",
+      "start": "15:55",
+      "end": "16:15",
+      "duration_min": 20,
+      "category": "meal",
+      "scope": "all",
+      "location": "Dining Hall",
+      "details": "Break before the closing session (the 'Coffee Bar' on the printed cards)",
+      "flow_map_key": null
+    },
+    {
+      "id": 22,
+      "name": "Travel",
+      "start": "16:15",
+      "end": "16:20",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to goshthi",
+      "flow_map_key": null
+    },
+    {
+      "id": 23,
+      "name": "Goshthi",
+      "start": "16:20",
+      "end": "17:05",
+      "duration_min": 45,
+      "category": "goshthi",
+      "scope": "by_goshthi_group",
+      "location": "Sabha Hall",
+      "details": "Interactive small-group activity on jivan charitra",
+      "flow_map_key": null
+    },
+    {
+      "id": 24,
+      "name": "Travel",
+      "start": "17:05",
+      "end": "17:15",
+      "duration_min": 10,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to Program 3",
+      "flow_map_key": null
+    },
+    {
+      "id": 25,
+      "name": "Program 3: NC27 Launch + Arti",
+      "start": "17:15",
+      "end": "18:55",
+      "duration_min": 100,
+      "category": "program",
+      "scope": "all",
+      "location": "Sabha Hall",
+      "details": "Combined closing session + NC27 launch + arti",
+      "flow_map_key": null
+    },
+    {
+      "id": 26,
+      "name": "Travel",
+      "start": "18:55",
+      "end": "19:00",
+      "duration_min": 5,
+      "category": "travel",
+      "scope": "all",
+      "location": "--",
+      "details": "Travel to dinner",
+      "flow_map_key": null
+    },
+    {
+      "id": 27,
+      "name": "Dinner",
+      "start": "19:00",
+      "end": "20:00",
+      "duration_min": 60,
+      "category": "meal",
+      "scope": "all",
+      "location": "Dining Hall",
+      "details": "Dinner",
+      "flow_map_key": null
+    },
+    {
+      "id": 28,
+      "name": "Wind Up (SEA delegates and karyakars)",
+      "start": "20:00",
+      "end": "21:00",
+      "duration_min": 60,
+      "category": "other",
+      "scope": "all",
+      "location": "Sabha Hall",
+      "details": "Help wind up the sabha hall",
+      "flow_map_key": null
+    }
+  ],
+  "asmita_talks": {
+    "_source": "Asmita_talks_Schedule_-_Asmita_Talks_Presenters.pdf (authoritative for rooms)",
+    "format": "Two rooms run in parallel each slot; delegates split into two tracks and rotate. 5 slots, snack between slot 2 and 3.",
+    "slots": [
+      {
+        "round": 1,
+        "start": "14:00",
+        "room_214": "Bhagwan Swaminarayan",
+        "room_212": "Holy Scriptures"
+      },
+      {
+        "round": 2,
+        "start": "14:20",
+        "room_214": "Bhagwan Swaminarayan",
+        "room_212": "Holy Scriptures"
+      },
+      {
+        "round": 3,
+        "start": "14:55",
+        "room_214": "Gunatit Guru Parampara",
+        "room_212": "Magnificent Mandirs"
+      },
+      {
+        "round": 4,
+        "start": "15:15",
+        "room_214": "Sadhus & Devotees",
+        "room_212": "Magnificent Mandirs"
+      },
+      {
+        "round": 5,
+        "start": "15:35",
+        "room_214": "Gunatit Guru Parampara",
+        "room_212": "Sadhus & Devotees"
+      }
+    ],
+    "presenters": {
+      "Bhagwan Swaminarayan": "Avibhai Patel (Room 214)",
+      "Holy Scriptures of the Sampraday": "P. Paramcharit Swami (Room 212)",
+      "Magnificent Mandirs of the Sampraday": "P. Akhandanand Swami (Room 212)",
+      "Gunatit Guru Parampara": "P. Anandmanan Swami (Room 214)",
+      "Sadhus and Devotees of the Sampraday": "Harshbhai Brahmbhatt (Room 214 / 212)"
+    },
+    "group_tracks": {
+      "track_A": [
+        "Ghanshyam",
+        "Nilkanth",
+        "Chidakash",
+        "Brahma"
+      ],
+      "track_B": [
+        "Sahajanand",
+        "Parabrahma",
+        "Gunatit",
+        "Pragat"
+      ]
+    },
+    "derived_track_rooms": {
+      "_confirm": "DERIVED from PDF + lead's Round-1 start (A->Bhagwan/214, B->Holy/212), assuming each track sees all 5 topics once and tracks never share a room. This reading also yields no movement between Round 4 and 5 (matches the lead). CONFIRM with lead - one alternate valid reading exists for the second half.",
+      "track_A_rooms": [
+        "214",
+        "212",
+        "214",
+        "212",
+        "212"
+      ],
+      "track_B_rooms": [
+        "212",
+        "214",
+        "212",
+        "214",
+        "214"
+      ]
+    }
+  },
+  "flow_maps": {
+    "_confirm": "Filenames correct EXCEPT rename Program_1_Exit_Flow.svg -> program2_to_lunch. Round 5 map dropped (track stays in same room as Round 4 - no movement). SVG color layers are wing-based (blue=eSide/red=iSide) but talks movement is track-based; confirm whether the two color layers should be re-mapped to track_A / track_B.",
+    "program2_to_lunch": "Program_1_Exit_Flow.svg (RENAME)",
+    "talks_round_1": "Asmita_Talks_-_Round_1.svg + Asmita_Talks_-_Round_1_5.svg (one per destination room)",
+    "talks_round_2_4": "Asmita_Talks_-_Round_2_-_4.svg"
+  },
+  "_confirm": [
+    "Asmita Talks: confirm derived_track_rooms (the per-track room sequence) - everything else in the talks section is locked from the PDF.",
+    "Two snack-type breaks intentional: block 14 Snack/Stretch (2:35) and block 21 Snack Break / Coffee Bar (3:55).",
+    "Goshthi is a single location (Sabha Hall) - no per-group rooms needed.",
+    "Arti stays folded into Program 3 (block 25)."
+  ]
+}

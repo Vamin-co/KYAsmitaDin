@@ -1,0 +1,64 @@
+{
+  "event": "Bal-Balika KY Asmita Din 2026",
+  "date": "2026-06-21",
+  "note": "Sections reveal as the day progresses. reveal_at ties to a schedule block; if the admin shifts the schedule, reveals shift with it. Admin can also reveal/hide any section manually. Dessert intentionally says only \"Ice cream\" (no brand name).",
+  "sections": [
+    {
+      "id": "breakfast",
+      "label": "Breakfast",
+      "reveal_at": "09:00",
+      "reveal_anchor_block": 1,
+      "items": [
+        "Overnight oats",
+        "Parfait",
+        "Syrup",
+        "Milk",
+        "Cereal"
+      ]
+    },
+    {
+      "id": "lunch",
+      "label": "Lunch",
+      "reveal_at": "12:45",
+      "reveal_anchor_block": 8,
+      "items": [
+        "Enchiladas",
+        "Mexican rice",
+        "Chips + salsa",
+        "Jarritos"
+      ]
+    },
+    {
+      "id": "snacks",
+      "label": "Snacks",
+      "reveal_at": "14:35",
+      "reveal_anchor_block": 14,
+      "items": [
+        "Trail mix",
+        "Cookies",
+        "Smoothies",
+        "Iced coffee"
+      ]
+    },
+    {
+      "id": "dinner",
+      "label": "Dinner",
+      "reveal_at": "19:00",
+      "reveal_anchor_block": 27,
+      "items": [
+        "Veggie burgers",
+        "Fries",
+        "Coleslaw"
+      ]
+    },
+    {
+      "id": "dessert",
+      "label": "Dessert",
+      "reveal_at": "19:00",
+      "reveal_anchor_block": 27,
+      "items": [
+        "Hellenika"
+      ]
+    }
+  ]
+}
