@@ -16,7 +16,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-dvh bg-paper">
       <div className="max-w-5xl mx-auto px-4 py-4">
         <header className="flex items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/AsmitaDin_Logo_Color.png" alt="Asmita Din" className="h-6 w-auto" />
             <span className="text-[10px] font-bold uppercase tracking-wide bg-brand text-white rounded-full px-2.5 py-1">
               Admin
             </span>
